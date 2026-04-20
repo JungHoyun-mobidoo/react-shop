@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { formatPrice } from "../utils/format";
+import { generateOrderId, saveOrder } from "../utils/orders";
 
 export default function Cart() {
+  const navigate = useNavigate();
   const { items, totalPrice, totalCount, updateQuantity, removeItem, clearCart } =
     useCart();
 
@@ -21,10 +23,17 @@ export default function Cart() {
   }
 
   const handleCheckout = () => {
-    alert(
-      `${totalCount}개 상품 / ${formatPrice(totalPrice)} 주문이 접수되었습니다.\n(데모용 알림입니다)`,
-    );
+    if (items.length === 0) return;
+    const orderId = generateOrderId();
+    saveOrder({
+      id: orderId,
+      items,
+      totalCount,
+      totalPrice,
+      createdAt: new Date().toISOString(),
+    });
     clearCart();
+    navigate(`/orders/${orderId}`);
   };
 
   return (

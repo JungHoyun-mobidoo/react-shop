@@ -13,3 +13,11 @@ export interface CartItem {
   product: Product;
   quantity: number;
 }
+
+export interface Order {
+  id: string;
+  items: CartItem[];
+  totalCount: number;
+  totalPrice: number;
+  createdAt: string;
+}
